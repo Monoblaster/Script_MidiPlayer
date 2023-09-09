@@ -1,0 +1,3 @@
+Midi files go in config/client/midi
+to play use this console command:
+MidiPlayer_Play("Instruments", songname, minutes to start at (optional));

@@ -219,7 +219,7 @@ InstrumentsPlayer = {
 							end
 							
 							local starttick = event[2]
-							if tick2ms(o.microsendsperbeat,PlayingTicksPerBeat,starttick -  o.currtick) <= 33 then
+							if starttick - o.currtick < 0 or tick2ms(o.microsendsperbeat,PlayingTicksPerBeat,starttick -  o.currtick) <= 33 then
 								o.currchord[#o.currchord + 1] = event
 								goto continue
 							end
