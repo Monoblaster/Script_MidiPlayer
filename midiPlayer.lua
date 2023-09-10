@@ -247,12 +247,21 @@ InstrumentsPlayer = {
 				while #o.currchord > 0 and count <= 4 do
 					local event = table.remove(o.currchord,1)
 					local note = midi2note(event[5],math.floor(tick2ms(o.microsendsperbeat,PlayingTicksPerBeat,event[3]) / 1000))
-					if note then
+					--ignore a note already in the chord
+					if note and not string.find(notes,note .. '+') then
 						notes = notes .. note .. '+'
+						count = count + 1
 					end
-					count = count + 1
 				end
 				notes = string.sub(notes,1,#notes - 1)
+
+				-- crush notes if we're too ful
+				if #o.currchord >= 4  then
+					local nextevent = PlayingEventList[PlayingIndex]
+					if nextevent and nextevent[1] == 'note' and nextevent[4] ~= 9 and nextevent[2] < o.currtick then
+						o.currchord = {}
+					end
+				end
 				
 				local currdelay = tick2ms(o.microsendsperbeat,PlayingTicksPerBeat,o.tickdifference)
 				if #o.currchord > 0 then
