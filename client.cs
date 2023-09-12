@@ -41,3 +41,19 @@ function MidiPlayer_Play(%method,%file,%minutes)
 	}
 	echo("not found!");
 }
+
+function MidiPlayer_List(%filepath)
+{
+	%i = 0;
+	%file = findFirstFile("config/client/midi/" @ %filepath @ "*.mid");
+	if(%file !$= "")
+	{
+		echo(%i++ @ ")" SPC filebase(%file));
+		while((%file = findNextFile("config/client/midi/" @ %filepath @ "*.mid")) !$= "")
+		{
+			echo(%i++ @ ")" SPC filebase(%file));
+		}
+		return"";
+	}
+	echo("none found!");
+}
