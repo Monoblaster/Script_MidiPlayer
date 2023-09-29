@@ -185,7 +185,7 @@ InstrumentsPlayer = {
 		end
 		o.tickdifference = 0
 		o.lastdelay = 0
-		o.currdelay = 0
+		o.currdelay = 06
 		o.currtick = 0
 		o.splitchord = false
 		o.currchord = {}
@@ -217,9 +217,14 @@ InstrumentsPlayer = {
 							if event[4] == 9 then
 								goto continue
 							end
+
+							if midi2note(event[5]) == "" then
+								goto continue
+							end
 							
 							local starttick = event[2]
 							if starttick - o.currtick < 0 or tick2ms(o.microsendsperbeat,PlayingTicksPerBeat,starttick -  o.currtick) <= 33 then
+								
 								o.currchord[#o.currchord + 1] = event
 								goto continue
 							end
@@ -240,15 +245,31 @@ InstrumentsPlayer = {
 					PlayingIndex = newindex
 				end
 				
+				-- remove duplicate notes from the chord
+				local count = 1
+				while #o.currchord > 0 and count <= #o.currchord do
+					local curr = o.currchord[count]
+					local next = count + 1
+					while next <= #o.currchord do
+						local value = o.currchord[next]
+						if curr[5] == value[5] then
+							table.remove(o.currchord,count)
+							count = count - 1
+							break
+						end
+						next = next + 1
+					end
+					count = count + 1
+				end
 				
 				-- add onto the phrase using the new chord
 				local notes = ''
-				local count = 1
+				count = 1
 				while #o.currchord > 0 and count <= 4 do
 					local event = table.remove(o.currchord,1)
 					local note = midi2note(event[5],math.floor(tick2ms(o.microsendsperbeat,PlayingTicksPerBeat,event[3]) / 1000))
-					--ignore a note already in the chord
-					if note and not string.find(notes,note .. '+') then
+
+					if note then
 						notes = notes .. note .. '+'
 						count = count + 1
 					end
