@@ -253,9 +253,14 @@ InstrumentsPlayer = {
 					while next <= #o.currchord do
 						local value = o.currchord[next]
 						if curr[5] == value[5] then
-							table.remove(o.currchord,count)
-							count = count - 1
-							break
+							if curr[3] < value[3] then
+								table.remove(o.currchord,count)
+								count = count - 1
+								break
+							end
+
+							table.remove(o.currchord,next)
+							next = next - 1
 						end
 						next = next + 1
 					end
