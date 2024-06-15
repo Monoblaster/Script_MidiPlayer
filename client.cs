@@ -6,6 +6,7 @@ function clientCmdCustomMidiPlayerNext()
 	luacall("MidiPlayer_Next");
 }
 
+$MidiPlayer::StartTime = $MidiPlayer::StartTime || getSimTime();
 $MidiPlayer::LastStop = 0;
 package MidiPlayer
 {
@@ -23,6 +24,7 @@ activatePackage("MidiPlayer");
 
 function MidiPlayer_Play(%method,%file,%minutes)
 {
+	$MidiPlayer::StartTime = getSimTime() / 1000 - %minutes * 60;
 	%file = findFirstFile("config/client/midi/" @ %file @ "*.mid");	
 	echo(%file);
 	if(%file !$= "")
@@ -56,4 +58,9 @@ function MidiPlayer_List(%filepath)
 		return"";
 	}
 	echo("none found!");
+}
+
+function MidiPlayer_Time()
+{
+	echo((getSimTime() / 1000 - $MidiPlayer::StartTime) / 60);
 }
