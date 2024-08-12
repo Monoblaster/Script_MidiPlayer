@@ -51,10 +51,13 @@ local function clean_up_warnings() -- 5.4
 	-- whenever there's a possibility that a warning might have been printed
 	-- by the function, or by any private functions it might have called.
 	if previous_times > 1 then
-		io.stderr:write('  previous message repeated '
-		 ..previous_times..' times\n')
+		print('  previous message repeated '
+		 ..previous_times..' times')
+		-- io.stderr:write('  previous message repeated '
+		--  ..previous_times..' times\n')
 	elseif previous_times > 0 then
-		io.stderr:write('  previous message repeated\n')
+		print('  previous message repeated')
+		-- io.stderr:write('  previous message repeated\n')
 	end
 	previous_times = 0
 	previous_warning = ''
@@ -63,8 +66,9 @@ local function warn(str)
 	if str == previous_warning then -- 5.4
 		previous_times = previous_times + 1
 	else
+		print(str)
 		clean_up_warnings()
-		io.stderr:write(str,'\n')
+		-- io.stderr:write(str,'\n')
 		previous_warning = str
 	end
 end
