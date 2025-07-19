@@ -314,7 +314,15 @@ InstrumentsPlayer = {
 				appendto = ''
 				phrase = newphrase
 			end
-			send(ts.call('addTaggedString','SetSongPhrase'),currphrase,string.sub(phrase,1),true)
+			
+			if #phrase > 0 then
+				if currphrase == 0 then 
+					send(ts.call('addTaggedString','Instruments_clearAllSongPhrases'))
+				end
+				send(ts.call('addTaggedString','SetSongPhrase'),currphrase,string.sub(phrase,1),true)
+				ts.callobj('InstrumentsClient', 'setSongPhrase', currphrase, string.sub(phrase,1))
+				ts.callobj('InstrumentsClient', 'addPhraseToSong', currphrase);
+			end
 		end
 
 		local s = ""
