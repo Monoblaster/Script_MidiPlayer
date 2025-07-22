@@ -197,9 +197,9 @@ InstrumentsPlayer = {
 		--done to prevent delays from not being set on nexts
 		o.lastdelay = 0
 		--convert events into insrtrument events
-		send(ts.call('addTaggedString','Instruments_clearAllSongPhrases'))
 		local appendto = ''
-		for currphrase = 0, 49 do
+		local maxSongPhrases = ts.get('Instruments::Client::ServerPref::MaxSongPhrases') - 1
+		for currphrase = 0, maxSongPhrases do
 			local phrase = appendto
 			while PlayingIndex < #PlayingEventList do
 				-- fill out a phrase to send
@@ -314,11 +314,19 @@ InstrumentsPlayer = {
 				appendto = ''
 				phrase = newphrase
 			end
-			send(ts.call('addTaggedString','SetSongPhrase'),currphrase,string.sub(phrase,1),true)
+			
+			if #phrase > 0 then
+				if currphrase == 0 then 
+					send(ts.call('addTaggedString','Instruments_clearAllSongPhrases'))
+				end
+				send(ts.call('addTaggedString','SetSongPhrase'),currphrase,string.sub(phrase,1),true)
+				ts.callobj('InstrumentsClient', 'setSongPhrase', currphrase, string.sub(phrase,1))
+				ts.callobj('InstrumentsClient', 'addPhraseToSong', currphrase);
+			end
 		end
 
 		local s = ""
-		for i = 0, 49 do
+		for i = 0, maxSongPhrases do
 			s = s .. "," .. i
 		end
 		s = string.sub(s,2)
