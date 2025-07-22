@@ -13,11 +13,14 @@ package MidiPlayer
 	function clientCmdStopPlayingInstrument()
 	{	
 		parent::clientCmdStopPlayingInstrument();
-		if(($MidiPlayer::LastStop + 1000) < getSimTime())
+		if($MidiPlayer::StartTime * 1000 > $MidiPlayer::LastStop)
 		{
-			luacall("MidiPlayer_Next");
+			if(($MidiPlayer::LastStop + 1000) < getSimTime())
+			{
+				luacall("MidiPlayer_Next");
+			}
+			$MidiPlayer::LastStop = getSimTime();
 		}
-		$MidiPlayer::LastStop = getSimTime();
 	}
 };
 activatePackage("MidiPlayer");
