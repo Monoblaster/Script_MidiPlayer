@@ -1,5 +1,8 @@
 if(isObject(MidiCtrlGui))
+{
+	canvas.popDialog(MidiCtrlGui);
 	MidiCtrlGui.delete();
+}
 
 new GuiControl(MidiCtrlGui)
 {
@@ -51,7 +54,29 @@ new GuiControl(MidiCtrlGui)
 			};
 		};
 
+		new GuiTextEditCtrl(MidiGuiSearchGui)
+		{
+			position = "75 28";
+			extent = "200 20";
+			command = "MidiPlayer_Search($thisControl.getValue());";
+		};
 		//BUTTONS
+		new GuiBitmapButtonCtrl()
+		{
+			profile = "BlockButtonProfile";
+			position = "500 27";
+			extent = "110 20";
+			minExtent = "8 2";
+			command = "MidiGui_reloadSongs();";
+			text = "Reload";
+			buttonType = "PushButton";
+			bitmap = "base/client/ui/button1";
+			alignLeft = "0";
+			alignTop = "0";
+			overflowImage = "0";
+			mKeepCached = "0";
+			mColor = "200 255 200 255";
+		};
 		new GuiBitmapButtonCtrl()
 		{
 			profile = "BlockButtonProfile";
@@ -160,3 +185,10 @@ new GuiControl(MidiCtrlGui)
 		};
 	};
 };
+
+if($MidiPlayer::DebugReload)
+{
+	MidiGui_loadSongHistory();
+	MidiGui_reloadSongs();
+	canvas.pushDialog(MidiCtrlGui);
+}

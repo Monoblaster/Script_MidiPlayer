@@ -1,5 +1,3 @@
-//#execOnChange
-
 //TOOD:
 // add searching
 // finish sorting
@@ -21,15 +19,14 @@ if(!$MidiPlayerGui::hasLoaded)
 function MidiGui_reloadSongs()
 {
 	setModPaths(getModPaths());
-	MidiSongsList.clear();
+	$MidiSongCount = 0;
 	for(%file = findFirstFile($Pref::MidiGui::MidiPath @ "*.mid"); %file !$= ""; %file = findNextFile($Pref::MidiGui::MidiPath @ "*.mid"))
 	{
-		%songName = strreplace(fileBase(%file), "_", " ");
-		if(getCharcount(%songName, "-") > 4) //likely to use - as space
-			%songName = strreplace(fileBase(%file), "-", " ");
-		MidiSongsList.addRow(%songCount++, %songName TAB mFloatLength(getFileLength(%file) / 1024, 0) TAB fileBase(%file));
+		$MidiSongsList[$MidiSongCount] = %file;
+		$MidiSongCount++;
 	}
-	MidiSongsList.sort(0, 1);
+
+	MidiPlayer_Search();
 }
 
 function MidiGui_PlaySong()
@@ -66,7 +63,7 @@ function MidiGui_PlayHistorySong()
 	if(%rowID == -1)
 		return;
 	
-	%songFile = getField(MidiSongsList.getRowText(%rowID), 2);
+	%songFile = getField(MidiHistorySongsList.getRowText(%rowID), 0);
 	MidiPlayer_Play("Instruments", %songFile);
 }
 
@@ -92,6 +89,30 @@ function MidiGui_loadSongHistory()
 
 	MidiHistorySongsList.hasLoadedSongs = true;
 	MidiHistorySongsList.sortNumerical(1, 0);
+}
+
+function MidiPlayer_Search(%searchString)
+{
+	MidiSongsList.clear();
+	for(%i = 0; %i < $MidiSongCount; %i++)
+	{
+		%file = $MidiSongsList[%i];
+		if(%searchString $= "" || striPos(%file, %searchString) != -1)
+		{
+			%songName = strreplace(fileBase(%file), "_", " ");
+			if(getCharcount(%songName, "-") > 4) //likely to use - as space
+				%songName = strreplace(fileBase(%file), "-", " ");
+			MidiSongsList.addRow(%i, %songName TAB mFloatLength(getFileLength(%file) / 1024, 0) TAB fileBase(%file));
+		}
+	}
+
+	MidiPlayer_applySorting();
+}
+
+function MidiPlayer_applySorting()
+{
+	//wip
+	MidiSongsList.sort(0, 1);
 }
 
 MidiGui_loadSongHistory();
