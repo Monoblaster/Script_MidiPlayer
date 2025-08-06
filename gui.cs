@@ -1,5 +1,12 @@
 //#execOnChange
 
+//TOOD:
+// add searching
+// finish sorting
+// favorites - maybe button switch between history & favorites
+// trim history size
+// reload button
+
 $Pref::MidiGui::MidiPath = "config/client/midi/";
 if(isObject(MidiCtrlGui))
 	MidiCtrlGui.delete();
