@@ -9,7 +9,14 @@
 
 $Pref::MidiGui::MidiPath = "config/client/midi/";
 exec("./MidiPlayer.gui");
+if(!$MidiPlayerGui::hasLoaded)
 {
+	$RemapDivision[$RemapCount] = "Midi Player";
+	$RemapName    [$RemapCount] = "Open Gui";
+	$RemapCmd     [$RemapCount] = "MidiGui_openGui";
+	$RemapCount++;
+	$MidiPlayerGui::hasLoaded = true;
+}
 
 function MidiGui_reloadSongs()
 {
@@ -89,6 +96,14 @@ function MidiGui_loadSongHistory()
 
 MidiGui_loadSongHistory();
 MidiGui_reloadSongs();
+
+function MidiGui_openGui(%value)
+{
+	if(%value)
+	{
+		canvas.pushDialog(MidiCtrlGui);
+	}
+}
 
 package MidiPlayerGui
 {
