@@ -1,7 +1,7 @@
 local midi = dofile('./MIDI-6.9/MIDI.lua')
 
 local function send(cmd,...)
-	ts.call('commandToServer',cmd,...)
+	bl.commandToServer(cmd,...)
 end
 
 local function frequency(n)
@@ -189,7 +189,7 @@ InstrumentsPlayer = {
 		o.currtick = 0
 		o.splitchord = false
 		o.currchord = {}
-		send(ts.call('addTaggedString','StopPlayingInstrument'))
+		bl.commandToServer('StopPlayingInstrument')
 	end,
 
 	next = function (o)
@@ -198,7 +198,7 @@ InstrumentsPlayer = {
 		o.lastdelay = 0
 		--convert events into insrtrument events
 		local appendto = ''
-		local maxSongPhrases = ts.get('Instruments::Client::ServerPref::MaxSongPhrases') - 1
+		local maxSongPhrases = bl['Instruments::Client::ServerPref::MaxSongPhrases'] - 1
 		for currphrase = 0, maxSongPhrases do
 			local phrase = appendto
 			while PlayingIndex < #PlayingEventList do
@@ -317,11 +317,11 @@ InstrumentsPlayer = {
 			
 			if #phrase > 0 then
 				if currphrase == 0 then 
-					send(ts.call('addTaggedString','Instruments_clearAllSongPhrases'))
+					bl.commandToServer('Instruments_clearAllSongPhrases')
 				end
-				send(ts.call('addTaggedString','SetSongPhrase'),currphrase,string.sub(phrase,1),true)
-				ts.callobj('InstrumentsClient', 'setSongPhrase', currphrase, string.sub(phrase,1))
-				ts.callobj('InstrumentsClient', 'addPhraseToSong', currphrase);
+				bl.commandToServer('SetSongPhrase',currphrase,string.sub(phrase,1),true)
+				bl.InstrumentsClient:setSongPhrase(currphrase, string.sub(phrase, 1))
+				bl.InstrumentsClient:addPhraseToSong(currphrase)
 			end
 		end
 
@@ -330,7 +330,7 @@ InstrumentsPlayer = {
 			s = s .. "," .. i
 		end
 		s = string.sub(s,2)
-		send(ts.call('addTaggedString','PlaySong'),s)
+		bl.commandToServer('PlaySong',s)
 	end
 }
 
