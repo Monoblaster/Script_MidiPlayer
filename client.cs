@@ -1,4 +1,5 @@
 luaexec("./midiplayer.lua");
+exec("./gui.cs");
 
 function clientCmdCustomMidiPlayerNext()
 {
