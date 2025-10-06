@@ -1,0 +1,194 @@
+if(isObject(MidiCtrlGui))
+{
+	canvas.popDialog(MidiCtrlGui);
+	MidiCtrlGui.delete();
+}
+
+new GuiControl(MidiCtrlGui)
+{
+	position = "600 600";
+	extent = "640 720";
+	new GuiWindowCtrl()
+	{
+		accelerator = "escape";
+		command = "canvas.popDialog(MidiCtrlGui);";
+		closeCommand = "canvas.popDialog(MidiCtrlGui);";
+		canMinimize = 0;
+		canMaximize = 0;
+		resizeWidth = false;
+		resizeHeight = true;
+		position = "0 0";
+		extent = "640 720";
+		new GuiSwatchCtrl()
+		{
+			position = "0 50";
+			vertSizing = "height";
+			extent = "483 720";
+			color = "255 255 255 0";
+			clipToParent = "1";
+			new GuiScrollCtrl()
+			{
+				profile = "GuiScrollProfile";
+				horizSizing = "right";
+				vertSizing = "height";
+				minExtent = "8 2";
+				enabled = "1";
+				visible = "1";
+				clipToParent = "1";
+				willFirstRespond = "0";
+				hScrollBar = "dynamic";
+				vScrollBar = "dynamic";
+				constantThumbHeight = "0";
+				childMargin = "0 0";
+				rowHeight = "40";
+				columnWidth = "30";
+
+				position = "3 0";
+				extent = "480 670";
+				new GuiTextListCtrl(MidiSongsList)
+				{
+					columns = "0 420 9999";
+					position = "0 0";
+					extent = "480 670";
+				};
+			};
+		};
+
+		new GuiTextEditCtrl(MidiGuiSearchGui)
+		{
+			position = "75 28";
+			extent = "200 20";
+			command = "MidiPlayer_Search($thisControl.getValue());";
+		};
+		//BUTTONS
+		new GuiBitmapButtonCtrl()
+		{
+			profile = "BlockButtonProfile";
+			position = "500 27";
+			extent = "110 20";
+			minExtent = "8 2";
+			command = "MidiGui_reloadSongs();";
+			text = "Reload";
+			buttonType = "PushButton";
+			bitmap = "base/client/ui/button1";
+			alignLeft = "0";
+			alignTop = "0";
+			overflowImage = "0";
+			mKeepCached = "0";
+			mColor = "200 255 200 255";
+		};
+		new GuiBitmapButtonCtrl()
+		{
+			profile = "BlockButtonProfile";
+			position = "500 50";
+			extent = "110 30";
+			minExtent = "8 2";
+			command = "MidiGui_PlaySong();";
+			text = "Play";
+			buttonType = "PushButton";
+			bitmap = "base/client/ui/button1";
+			alignLeft = "0";
+			alignTop = "0";
+			overflowImage = "0";
+			mKeepCached = "0";
+			mColor = "255 200 200 255";
+		};
+
+		//BUTTONS
+		new GuiBitmapButtonCtrl(MidiGuiSortNameGui)
+		{
+			profile = "BlockButtonProfile";
+			position = "10 28";
+			extent = "50 20";
+			minExtent = "8 2";
+			command = "MidiGui_SortName();";
+			text = "Name";
+			buttonType = "PushButton";
+			bitmap = "base/client/ui/button1";
+			alignLeft = "0";
+			alignTop = "0";
+			overflowImage = "0";
+			mKeepCached = "0";
+			mColor = "255 200 200 255";
+		};
+		new GuiBitmapButtonCtrl(MidiGuiSortSizeGui)
+		{
+			profile = "BlockButtonProfile";
+			position = "10 28";
+			extent = "50 20";
+			minExtent = "8 2";
+			command = "MidiGui_SortName();";
+			text = "Name";
+			buttonType = "PushButton";
+			bitmap = "base/client/ui/button1";
+			alignLeft = "0";
+			alignTop = "0";
+			overflowImage = "0";
+			mKeepCached = "0";
+			mColor = "255 200 200 255";
+		};
+
+
+		//PLAY HISTORY
+		new GuiBitmapButtonCtrl()
+		{
+			profile = "BlockButtonProfile";
+			position = "500 90";
+			extent = "110 30";
+			minExtent = "8 2";
+			command = "MidiGui_PlayHistorySong();";
+			text = "Play History";
+			buttonType = "PushButton";
+			bitmap = "base/client/ui/button1";
+			//lockAspectRatio = "0";
+			alignLeft = "0";
+			alignTop = "0";
+			overflowImage = "0";
+			mKeepCached = "0";
+			mColor = "255 200 200 255";
+		};
+
+		new GuiSwatchCtrl()
+		{
+			position = "482 200";
+			extent = "155 517";
+			color = "255 255 255 0";
+			vertSizing = "height";
+			new GuiScrollCtrl()
+			{
+				profile = "GuiScrollProfile";
+				horizSizing = "right";
+				vertSizing = "height";
+				position = "3 3";
+				extent = "158 670";
+				minExtent = "8 2";
+				enabled = "1";
+				visible = "1";
+				clipToParent = "1";
+				willFirstRespond = "0";
+				hScrollBar = "dynamic";
+				vScrollBar = "dynamic";
+				constantThumbHeight = "0";
+				childMargin = "0 0";
+				rowHeight = "40";
+				columnWidth = "30";
+
+				position = "0 0";
+				extent = "155 670";
+				new GuiTextListCtrl(MidiHistorySongsList)
+				{
+					columns = "0 999";
+					position = "0 0";
+					extent = "155 670";
+				};
+			};
+		};
+	};
+};
+
+if($MidiPlayer::DebugReload)
+{
+	MidiGui_loadSongHistory();
+	MidiGui_reloadSongs();
+	canvas.pushDialog(MidiCtrlGui);
+}
