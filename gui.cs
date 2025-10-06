@@ -1,9 +1,7 @@
 //TOOD:
-// add searching
 // finish sorting
 // favorites - maybe button switch between history & favorites
 // trim history size
-// reload button
 
 $Pref::MidiGui::MidiPath = "config/client/midi/";
 exec("./MidiPlayer.gui");
